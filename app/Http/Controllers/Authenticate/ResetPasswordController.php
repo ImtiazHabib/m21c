@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Authenticate;
 
+use App\Mail\ResetPasswordMail;
 use Str;
 use Mail;
 use Throwable;
@@ -51,17 +52,21 @@ class ResetPasswordController extends Controller
             ]);
         }
 
-        $email_data = [
+        // $email_data = [
 
-            "user" => $user,
-            "token" => $token,
+        //     "user" => $user,
+        //     "token" => $token,
 
-        ];
+        // ];
 
-        Mail::send('emails.reset_password', $email_data, function ($message) use ($user) {
-            $message->to($user->email, $user->name);
-            $message->subject('Password Rest Request');
-        });
+        // Mail::send('emails.reset_password', $email_data, function ($message) use ($user) {
+        //     $message->to($user->email, $user->name);
+        //     $message->subject('Password Rest Request');
+        // });
+
+        // === By Mailer
+         
+        Mail::to($user_email)->send(new ResetPasswordMail($user,$token));
 
         return response()->json([
             'status' => true,
